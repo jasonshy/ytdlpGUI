@@ -10,19 +10,17 @@ app.geometry("1800x360")
 app.title("Downloader")
 customtkinter.set_appearance_mode("system")
 app.resizable(False, False)
+
 #Font
 my_font = customtkinter.CTkFont(family = "Arial", size = 12)
-
-
-
 
 ########################################################################### Read the setting file for the previous path and file type #######################################################################
 def readFile():
     	try:
         	with open("dl_settings.txt", "r") as file:
-        		return file.read().split('\n') # Read and strip any extra whitespace
+        		return file.read().split('\n') #Read and strip any extra whitespace
     	except FileNotFoundError:
-        	return "Select Save Path"  # Default value if the file doesn't exist
+        	return "Select Save Path"  # < Default value if the file doesn't exist
 settings = readFile()
 fileType = settings[0]
 path = settings[1]
@@ -73,10 +71,10 @@ optionFrame = customtkinter.CTkFrame(master = app,
 			              fg_color = "black")
 			              
 optionFrame.pack(side = "left", padx = 10)
-
-#Mp3/4 Option menu
-
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
+####################################################################################Mp3/4 Option menu###################################################################################
 #Change file type
 def writeFileType(choice):
 	try:
@@ -168,9 +166,14 @@ def press_to_download():
 		            'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '320',
 		            }],}
 	elif fileType == "MP4":
-		ydl_opts = {"format": "bestvideo+bestaudio",
+		ydl_opts = {"format": "bestvideo[height<=1080]+bestaudio/best",
 		            "outtmpl": os.path.join(savePath,
-		             "%(title)s.%(ext)s"),}
+		            "%(title)s.%(ext)s"),
+		            "merge_output_format": "mp4",
+		            "postprocessor_args": [
+		            "-c:v", "copy",  # Copy video without re-encoding
+		            "-c:a", "aac",   # Re-encode audio to AAC (MP4 compatible)
+		            ], }
 				
 				
     # Download the video using yt-dlp
@@ -186,12 +189,6 @@ def press_to_download():
 	
 	
 	
-	
-	
-	
-	
-	
-
 
 dl_button = customtkinter.CTkButton(master = dlFrame, text = "Download" ,command = press_to_download, width = 300, border_color="#ff5b00",  
                                              border_width=1,

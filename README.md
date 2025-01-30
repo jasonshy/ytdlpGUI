@@ -1,2 +1,2 @@
 # ytdlpGUI
-A simple GUI for managing yt-dlp video downloads
+A simple GUI for using yt-dlp without memorizing commands
